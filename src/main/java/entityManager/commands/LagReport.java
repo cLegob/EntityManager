@@ -89,4 +89,9 @@ public class LagReport extends SubCommand {
 		return "Display top entities for the world you're in";
 	}
 
+	@Override
+	public String permission() {
+		return "entitymanager.lagreport";
+	}
+
 }

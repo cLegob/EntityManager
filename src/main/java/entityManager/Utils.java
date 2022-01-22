@@ -1,117 +1,49 @@
 package entityManager;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.World.Environment;
-import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+
+import java.util.Map;
 
 public class Utils {
-	public static File dataFolder = EntityManager.plugin.getDataFolder();
 
-	public static String copyableLocation(Player p) {
-		Location l = p.getLocation();
-		return l.getBlockX() + " " + l.getBlockY() + " " + l.getBlockZ();
-	}
-	public static String copyableLocation(Location l) {
-		return l.getBlockX() + " " + l.getBlockY() + " " + l.getBlockZ();
-	}
-	public static String locationToString(Player p) {
-		Location l = p.getLocation();
-		return "x" + l.getBlockX() + ", y" + l.getBlockY() + ", z" + l.getBlockZ();
-	}
-	public static String locationToString(Location l) {
-		return "x" + l.getBlockX() + ", y" + l.getBlockY() + ", z" + l.getBlockZ();
-	}
-	public static String blockToString(Block block) {
-		return block.getType().toString().toLowerCase().replace("_", " ");
-	}
-	public static String worldToString(World w) {
-		if (w.getName().equals("world"))
-			return "overworld";
-		if (w.getName().equals("world_nether"))
-			return "nether";
-		if (w.getName().equals("world_the_end"))
-			return "end";
-		else {
-			return "null";
-		}
-	}
+    public static String locationToString(Location l) {
+        return "x" + l.getBlockX() + ", y" + l.getBlockY() + ", z" + l.getBlockZ();
+    }
 
-	public static int parseNumber(CommandSender sender, String number, String error) {
-		int result = 0;
-		try {
-			result = Integer.parseInt(number);
-		} catch (NumberFormatException e) {
-			sender.sendMessage(error);
-		}
-		return result;
-	}
+    public static String formatEntity(String name) {
+        return StringUtils.capitalize(name.toLowerCase().replace("_", " "));
+    }
 
-	public static void count(EntityType e, Map<EntityType, Integer> map) {
-		map.putIfAbsent(e, 0);
-		map.put(e, map.get(e) + 1);
-	}
+    public static String worldToString(World w) {
+    	String name = w.getName();
+        if (name.equals("world")) return "overworld";
+        if (name.equals("world_nether")) return "nether";
+        if (name.equals("world_the_end")) return "end";
+        return "null";
+    }
 
-	public static Environment getPlayerWorld(Player p) {
-		return p.getWorld().getEnvironment();
-	}
-	public static String getBlockLocation(Location l) {
-		return l.getBlockX() + ", " + l.getBlockY() + ", " + l.getBlockZ() + ".";
-	}
-	public static Boolean inventoryNotEmpty(Player p) {
-		return p.getInventory().getContents() != null && p.getInventory().getArmorContents() != null;
-	}
-	public static boolean inventoryFull(Player p) {
-		return p.getInventory().firstEmpty() == -1;
-	}
-	public static String getCurrentDate() {
-		SimpleDateFormat niceLookingDate = new SimpleDateFormat("MM/dd/yyyy");
-		return niceLookingDate.format(new Date());
-	}
-	public static String formatDate(Date date) {
-		SimpleDateFormat niceLookingDate = new SimpleDateFormat("MM/dd/yyyy");
-		return niceLookingDate.format(date);
-	}
-	public static void saveFile(YamlConfiguration config, File file) {
-		try {
-			config.save(file);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	public static DecimalFormat numberFormat = new DecimalFormat("#,###");
-	static Date date = new Date();
-	static SimpleDateFormat niceLookingDate = new SimpleDateFormat("MM-dd-yyyy");
-	static String format = niceLookingDate.format(date);
-	public static void logToFile(String message, String fileName) {
-		try {
-			if (!dataFolder.exists())
-				dataFolder.mkdir();
-			File saveTo = new File(dataFolder,
-					fileName + ".txt");
-			if (!saveTo.exists()) {
-				saveTo.createNewFile();
-			}
-			FileWriter fw = new FileWriter(saveTo, true);
-			PrintWriter pw = new PrintWriter(fw);
-			pw.println("[" + format.toString() + "] " + message);
-			pw.flush();
-			pw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    public static int parseNumber(CommandSender sender, String number, String error) {
+        int result = -1;
+        try {
+            result = Integer.parseInt(number);
+        } catch (NumberFormatException e) {
+            sender.sendMessage(error);
+        }
+        return result;
+    }
+
+    public static void count(EntityType e, Map<EntityType, Integer> map) {
+        map.putIfAbsent(e, 0);
+        map.put(e, map.get(e) + 1);
+    }
+
+    public static void message(CommandSender sender, String message) {
+        sender.sendMessage(Chat.PLUGIN_TAG + message);
+    }
+
 }

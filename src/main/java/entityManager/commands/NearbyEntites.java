@@ -56,7 +56,6 @@ public class NearbyEntites extends SubCommand {
 		String mark = Chat.darkGray + "- " + Chat.gray;
 		entityMap.entrySet().forEach(entry -> sender.sendMessage(mark + toString(entry)
 				+ ": " + Chat.reset + entry.getValue()));
-		return;
 	}
 
 	private static String toString(Entry<EntityType, Integer> entry) {
@@ -66,6 +65,11 @@ public class NearbyEntites extends SubCommand {
 	@Override
 	public String description() {
 		return "Display nearby entities";
+	}
+
+	@Override
+	public String permission() {
+		return "entitymanager.nearby";
 	}
 
 }

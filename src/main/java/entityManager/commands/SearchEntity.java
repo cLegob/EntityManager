@@ -1,119 +1,96 @@
 package entityManager.commands;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import entityManager.Chat;
+import entityManager.EntityManager;
+import entityManager.SubCommand;
+import entityManager.Utils;
 import org.apache.commons.lang.WordUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import entityManager.EntityManager;
-import entityManager.SubCommand;
-import entityManager.Utils;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class SearchEntity extends SubCommand {
-	private EntityType toSearch = EntityType.VILLAGER;
-	
-	public SearchEntity(EntityManager entityManager) {
-		super(entityManager, "search");
-	}
 
-	@Override
-	public void execute(CommandSender sender, String[] args) {
-		if (!(sender instanceof Player)) {
-			sender.sendMessage("Player only command.");
-			return;
-		}
-			
-		Player p = (Player) sender;
-		//String worldToString = Utils.worldToString(p.getWorld());
-		List<Player> playersInWorld = p.getWorld().getPlayers();
+    public SearchEntity(EntityManager entityManager) {
+        super(entityManager, "search");
+    }
 
-		if (args.length < 2) {
-			sender.sendMessage("Usage: /entity search <entity>");
-			return;
-		}
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player p)) {
+            sender.sendMessage("Player only command.");
+            return;
+        }
 
-		if (args.length > 1) {
-			if (EntityType.valueOf(args[1]) == null) {
-				p.sendMessage(ChatColor.RED + "That is not a searchable entity.");
-				return;
-			}
-			
-			toSearch = EntityType.valueOf(args[1]);
+        List<Player> playersInWorld = p.getWorld().getPlayers();
 
-			HashMap<Player, Integer> entityList = new HashMap<Player, Integer>();
-			HashMap<Player, Location> locMap = new HashMap<Player, Location>();
+        if (args.length < 2) {
+            sender.sendMessage("Usage: /entity search <entity>");
+            return;
+        }
 
-			for (Player player : playersInWorld) {
-				List<Entity> nearby = player.getNearbyEntities(200, 150, 200);
-				for (Entity e : nearby) {
-					if (e.getType() == toSearch) {
-						count(player, entityList);
-						locMap.put(player, e.getLocation());
-					}
-				}
-			}
+        EntityType toSearch = EntityType.valueOf(args[1].toUpperCase());
 
-			entityList = sort(entityList);
-			String lookedUp = WordUtils.capitalize(toSearch.toString().toLowerCase().replace("_", " "));
-			if (entityList.size() == 0) {
-				sender.sendMessage("No entities of that type were found.");
-			} else {
-				sender.sendMessage("Players with the most " + lookedUp + "s:");
-			}
-			
-			int limit = 0;
-			for (Entry<Player, Integer> entry : entityList.entrySet()) {
-				//String entity = WordUtils.capitalize(entry.getKey().toString().toLowerCase().replace("_", " "));
-				int amount = entry.getValue();
-				if (limit < 12) {
-					sender.sendMessage(ChatColor.DARK_GRAY + "- " + ChatColor.GRAY + entry.getKey().getName() + ": " + ChatColor.RED + amount
-							+ " " + ChatColor.WHITE + Utils.locationToString(locMap.get(entry.getKey())));
-				}
-				limit++;
-			}
-		}
-		return;
-	}
+        var entityList = new HashMap<Player, Integer>();
+        var locMap = new HashMap<Player, Location>();
 
-	private HashMap<Player, Integer> sort(HashMap<Player, Integer> map) {
-		List<Map.Entry<Player, Integer>> list = new LinkedList<Map.Entry<Player, Integer>>(map.entrySet());
+        for (Player player : playersInWorld) {
+            List<Entity> nearby = player.getNearbyEntities(200, 150, 200);
+            for (Entity e : nearby) {
+                if (e.getType() == toSearch) {
+                    count(player, entityList);
+                    locMap.put(player, e.getLocation());
+                }
+            }
+        }
 
-		Collections.sort(list, new Comparator<Map.Entry<Player, Integer>>() {
-			public int compare(Map.Entry<Player, Integer> o1, Map.Entry<Player, Integer> o2) {
-				return (o2.getValue()).compareTo(o1.getValue());
-			}
-		});
+        entityList = sort(entityList);
+        String lookedUp = WordUtils.capitalize(toSearch.toString().toLowerCase().replace("_", " "));
+        if (entityList.size() == 0) {
+            sender.sendMessage("No entities of that type were found.");
+        } else {
+            sender.sendMessage("Players with the most " + lookedUp + "s:");
+        }
 
-		HashMap<Player, Integer> sorted = new LinkedHashMap<Player, Integer>();
-		for (Map.Entry<Player, Integer> entry : list) {
-			sorted.put(entry.getKey(), entry.getValue());
-		}
-		return sorted;
-	}
+        int limit = 0;
+        for (Entry<Player, Integer> entry : entityList.entrySet()) {
+            if (limit < 12) {
+                sender.sendMessage(Chat.darkGray + "- " + Chat.gray + entry.getKey().getName() + ": " + Chat.red + entry.getValue()
+                        + " " + Chat.reset + Utils.locationToString(locMap.get(entry.getKey())));
+            }
+            limit++;
+        }
+    }
 
-	private void count(Player p, Map<Player, Integer> entityList) {
-		if (entityList.get(p) == null) {
-			entityList.put(p, 1);
-		} else {
-			entityList.put(p, entityList.get(p) + 1);
-		}
-	}
-	
-	@Override
-	public String description() {
-		return "Lookup top entity count per player for a specific entity";
-	}
+    private HashMap<Player, Integer> sort(HashMap<Player, Integer> map) {
+        List<Map.Entry<Player, Integer>> list = new LinkedList<>(map.entrySet());
+
+        Collections.sort(list, (o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
+
+        HashMap<Player, Integer> sorted = new LinkedHashMap<>();
+        for (Map.Entry<Player, Integer> entry : list) {
+            sorted.put(entry.getKey(), entry.getValue());
+        }
+        return sorted;
+    }
+
+    private void count(Player p, Map<Player, Integer> entityList) {
+        entityList.merge(p, 1, Integer::sum);
+    }
+
+    @Override
+    public String description() {
+        return "Lookup top entity count per player for a specific entity";
+    }
+
+    @Override
+    public String permission() {
+        return "entitymanager.searchentity";
+    }
 
 }

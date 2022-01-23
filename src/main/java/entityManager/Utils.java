@@ -32,7 +32,7 @@ public class Utils {
         try {
             result = Integer.parseInt(number);
         } catch (NumberFormatException e) {
-            sender.sendMessage(error);
+            EntityManager.getPlugin(EntityManager.class).msg(sender, error);
         }
         return result;
     }
@@ -40,10 +40,6 @@ public class Utils {
     public static void count(EntityType e, Map<EntityType, Integer> map) {
         map.putIfAbsent(e, 0);
         map.put(e, map.get(e) + 1);
-    }
-
-    public static void message(CommandSender sender, String message) {
-        sender.sendMessage(Chat.PLUGIN_TAG + message);
     }
 
 }

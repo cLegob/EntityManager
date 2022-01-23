@@ -70,7 +70,7 @@ public class SearchEntity extends SubCommand {
     private HashMap<Player, Integer> sort(HashMap<Player, Integer> map) {
         List<Map.Entry<Player, Integer>> list = new LinkedList<>(map.entrySet());
 
-        Collections.sort(list, (o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
+        list.sort((o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
 
         HashMap<Player, Integer> sorted = new LinkedHashMap<>();
         for (Map.Entry<Player, Integer> entry : list) {

@@ -1,9 +1,6 @@
 package entityManager.commands;
 
-import entityManager.Chat;
-import entityManager.EntityManager;
-import entityManager.EntitySelection;
-import entityManager.SubCommand;
+import entityManager.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -26,14 +23,14 @@ public class UndoRemovalCommand extends SubCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(Chat.red + "That's a player only command.");
+            plugin.msg(sender, "That's a player only command.");
             return;
         }
 
         EntitySelection selection = plugin.getSelectionMap().getPlayerSelection(player);
 
         if (selection == null) {
-            sender.sendMessage(Chat.red + "You don't have anything to undo.");
+            plugin.msg(player, "You don't have anything to undo.");
             return;
         }
 

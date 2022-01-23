@@ -4,8 +4,6 @@ import entityManager.Chat;
 import entityManager.EntityManager;
 import entityManager.SubCommand;
 import entityManager.Utils;
-import entityManager.teleporter.EntityList;
-import entityManager.teleporter.EntityTeleportMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -14,7 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class WandToggleCommand extends SubCommand implements Listener {
-    private Map<UUID, Boolean> map;
+    private final Map<UUID, Boolean> map;
 
     public WandToggleCommand(EntityManager p) {
         super(p, "togglewand");
@@ -28,14 +26,23 @@ public class WandToggleCommand extends SubCommand implements Listener {
             return;
         }
 
-        if (map.get(player.getUniqueId())) {
-            map.put(player.getUniqueId(), false);
-            Utils.message(player, "Toggled wand usage " + Chat.red + "OFF" + Chat.reset + ".");
+        if (!player.hasPermission("entitymanager.teleport")) {
+            sender.sendMessage(EntityManager.NO_PERMISSION);
             return;
         }
 
-        map.put(player.getUniqueId(), true);
-        Utils.message(player, "Toggled wand usage " + Chat.green + "ON" + Chat.reset + ".");
+        UUID pUUID = player.getUniqueId();
+
+        map.putIfAbsent(pUUID, false);
+
+        if (map.get(pUUID)) {
+            map.put(pUUID, false);
+            plugin.msg(player, "Toggled wand usage " + Chat.red + "OFF" + Chat.reset + ".");
+            return;
+        }
+
+        map.put(pUUID, true);
+        plugin.msg(player, "Toggled wand usage " + Chat.green + "ON" + Chat.reset + ".");
     }
 
     @Override

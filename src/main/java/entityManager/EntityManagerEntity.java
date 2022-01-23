@@ -1,6 +1,5 @@
 package entityManager;
 
-import com.google.gson.Gson;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
@@ -15,17 +14,17 @@ public class EntityManagerEntity {
     }
 
     public void remove() {
-        if (!isProtected()) {
-            entity.remove();
-            EntityManager.getPlugin(EntityManager.class).getLogger().info(entity.getName() + " at " + location());
-        }
+        entity.remove();
+        EntityManager.getPlugin(EntityManager.class).getLogger().info(entity.getName() + " at " + location());
     }
 
-    public boolean isProtected() { return EntityManager.getPlugin(EntityManager.class).getProtected().contains(entity.getType()); }
+    public String location() {
+        return Utils.locationToString(entity.getLocation());
+    }
 
-    public String location() { return Utils.locationToString(entity.getLocation()); }
-
-    public EntityType type() { return entity.getType(); }
+    public EntityType type() {
+        return entity.getType();
+    }
 
     public void respawn() {
         entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());

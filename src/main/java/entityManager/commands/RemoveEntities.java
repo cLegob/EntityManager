@@ -27,7 +27,7 @@ public class RemoveEntities extends SubCommand {
             return;
         }
 
-        if (!player.hasPermission("entitymanager.use")) {
+        if (!player.hasPermission("entitymanager.remove")) {
             sender.sendMessage(EntityManager.NO_PERMISSION);
             return;
         }
@@ -37,34 +37,36 @@ public class RemoveEntities extends SubCommand {
             return;
         }
 
-        int radius = Utils.parseNumber(sender, args[1], Chat.red + "Error: That's not a number");
-
+        int radius = Utils.parseNumber(sender, args[1], "Usage: /entity remove <radius> <excluded>");
         if (radius == -1) return;
 
-        int max = 50;
+        int max = 200;
         if (radius > max || radius < 1) {
-            sender.sendMessage("You can only remove entities within a radius of " + max + ".");
+            plugin.msg(player, "You can only remove entities within a radius of " + max + ".");
             return;
         }
 
-        EntitySelection selected;
         List<Entity> nearby = player.getNearbyEntities(radius, 50, radius);
 
         EntityType toInclude = null;
-
         if (args.length  >= 3) {
             toInclude = EntityType.valueOf(args[2].toUpperCase()); //todo handle null
         }
 
-        EntityType finalToInclude = toInclude; // && en.getType() != finalToInclude
-        nearby.removeIf(en -> plugin.getProtected().contains(en.getType()));
+        EntityType finalToInclude = toInclude;
+        nearby.removeIf(entity -> plugin.getProtected().contains(entity.getType()) && entity.getType() != finalToInclude);
 
-        selected = new EntitySelection(player, nearby, toInclude);
+        if (nearby.size() == 0) {
+            plugin.msg(player, "No entities found to remove.");
+            return;
+        }
 
-        String toDelete = selected.total()  > 1 ? "You are about to remove " + Chat.red + "1" + Chat.reset + " entity:"
-                : "You are about to remove " + Chat.red + selected.total() + Chat.reset + " entities.";
+        EntitySelection selected = new EntitySelection(player, nearby);
 
-        sender.sendMessage(toDelete);
+        String youAreAboutTo = selected.getTotal() < 2 ? "You are about to remove " + Chat.red + "1" + Chat.reset
+                + " entity:" : "You are about to remove " + Chat.red + selected.getTotal() + Chat.reset + " entities.";
+
+        sender.sendMessage(youAreAboutTo);
         sender.sendMessage(selected.toString());
         sender.sendMessage("Type" + Chat.red + " /em confirm" + Chat.reset + " to confirm this removal.");
     }
@@ -77,22 +79,6 @@ public class RemoveEntities extends SubCommand {
     @Override
     public String permission() {
         return "entitymanager.remove";
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (!sender.hasPermission("entitymanager.remove")) return Collections.emptyList();
-
-        if (args.length == 1) {
-            return Arrays.asList("5", "10", "15", "20");
-        }
-
-        if (args.length > 2) {
-            var results = new ArrayList<String>();
-            for (EntityType m : EntityType.values()) results.add(m.name());
-            return results;
-        }
-        return Collections.emptyList();
     }
 
 }

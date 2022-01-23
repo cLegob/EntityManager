@@ -16,4 +16,8 @@ public class SelectionMap {
     public void setSelection(Player player, EntitySelection theSelection) {
         selections.put(player.getUniqueId(), theSelection);
     }
+
+    public void destroySelection(Player player) {
+        selections.put(player.getUniqueId(), null);
+    }
 }

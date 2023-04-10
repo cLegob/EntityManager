@@ -28,7 +28,6 @@ public class UndoRemovalCommand extends SubCommand {
         }
 
         EntitySelection selection = plugin.getSelectionMap().getPlayerSelection(player);
-
         if (selection == null) {
             plugin.msg(player, "You don't have anything to undo.");
             return;

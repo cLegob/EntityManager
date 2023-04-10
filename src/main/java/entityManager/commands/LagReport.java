@@ -24,7 +24,6 @@ public class LagReport extends SubCommand {
 		}
 
         List<Entity> world = player.getWorld().getEntities();
-
 		EntitySelection selection = new EntitySelection(player, world);
         selection.sortMap();
         selection.setMinimumResult(10);

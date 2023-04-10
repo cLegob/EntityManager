@@ -8,7 +8,6 @@ public class TeleportUtils {
 
     public static void teleport(Player player, Location location, EntityTeleportMap map) {
         EntityList list = map.getPlayerList(player);
-
         if (list == null) {
             player.sendMessage(Chat.red + "Error: Your list doesn't exist.");
             return;

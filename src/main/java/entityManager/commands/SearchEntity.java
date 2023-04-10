@@ -28,14 +28,12 @@ public class SearchEntity extends SubCommand {
         }
 
         List<Player> playersInWorld = p.getWorld().getPlayers();
-
         if (args.length < 2) {
             sender.sendMessage("Usage: /entity search <entity>");
             return;
         }
 
         EntityType toSearch = EntityType.valueOf(args[1].toUpperCase());
-
         var entityList = new HashMap<Player, Integer>();
         var locMap = new HashMap<Player, Location>();
 

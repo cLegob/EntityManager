@@ -106,9 +106,9 @@ public class EntityManager extends JavaPlugin {
 
     private List<String> getResults(String[] args, List<String> toSearch) {
         List<String> results = new ArrayList<>();
-        for (String lemonade : toSearch) {
-            if (lemonade.toLowerCase().startsWith(args[1].toLowerCase()))
-                results.add(lemonade);
+        for (String string : toSearch) {
+            if (string.toLowerCase().startsWith(args[1].toLowerCase()))
+                results.add(string);
         }
         return results;
     }

@@ -32,7 +32,6 @@ public class ConfirmCommand extends SubCommand {
         }
 
         EntitySelection selection = plugin.getSelectionMap().getPlayerSelection(player);
-
         if (selection == null) {
             sender.sendMessage(Chat.red + "You don't have anything to confirm.");
             return;

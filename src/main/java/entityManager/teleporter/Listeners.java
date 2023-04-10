@@ -38,13 +38,9 @@ public class Listeners implements Listener {
         Player p = e.getPlayer();
         if (!p.hasPermission("entitymanager.teleport")) return;
         if (e.getHand().equals(EquipmentSlot.OFF_HAND)) return;
-
-        if (!plugin.wandEnabled(p)) {
-            return;
-        }
+        if (!plugin.wandEnabled(p)) return;
 
         ItemStack inHand = p.getInventory().getItemInMainHand();
-
         if (inHand.equals(selectionWand)) {
             EntityList theList = map.getPlayerList(p);
             Entity theEntity = e.getRightClicked();
@@ -58,7 +54,6 @@ public class Listeners implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
-
         if (!plugin.wandEnabled(p)) {
             return;
         }
@@ -68,7 +63,6 @@ public class Listeners implements Listener {
         }
 
         ItemStack inHand = p.getInventory().getItemInMainHand();
-
         if (inHand.equals(teleportWand)) {
             Location location = e.getPlayer().getLocation();
             TeleportUtils.teleport(p, location, map);

@@ -47,7 +47,6 @@ public class RemoveEntities extends SubCommand {
         }
 
         List<Entity> nearby = player.getNearbyEntities(radius, 50, radius);
-
         EntityType toInclude = null;
         if (args.length  >= 3) {
             toInclude = EntityType.valueOf(args[2].toUpperCase()); //todo handle null
@@ -62,7 +61,6 @@ public class RemoveEntities extends SubCommand {
         }
 
         EntitySelection selected = new EntitySelection(player, nearby);
-
         String youAreAboutTo = selected.getTotal() < 2 ? "You are about to remove " + Chat.red + "1" + Chat.reset
                 + " entity:" : "You are about to remove " + Chat.red + selected.getTotal() + Chat.reset + " entities.";
 

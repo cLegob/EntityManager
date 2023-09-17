@@ -26,11 +26,12 @@ public class EntityTeleport extends SubCommand implements Listener {
 
         if (theMap.getPlayerList(player).isEmpty()) {
             sender.sendMessage(Chat.red + "Your entity teleport list is empty. " + Chat.reset
-                    + "Use an arrow to select new entities to teleport.");
+                    + "Use a(n) " + EntityManager.SELECTION_WAND.getType() + " to select new entities to teleport.");
             return;
         }
 
         TeleportUtils.teleport(player, player.getLocation(), theMap);
+        player.sendMessage("Teleported. Use " + Chat.gray + "/em clearteleportlist " + Chat.reset + "to clear your list.");
     }
 
     @Override

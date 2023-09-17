@@ -7,10 +7,12 @@ import entityManager.commands.teleportCommands.WandToggleCommand;
 import entityManager.teleporter.EntityTeleportMap;
 import entityManager.teleporter.Listeners;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
@@ -18,6 +20,8 @@ import java.util.*;
 public class EntityManager extends JavaPlugin {
     public static final String VERSION = "1.5";
     public static final String NO_PERMISSION = Chat.red + "You do not have permission to do that.";
+    public static ItemStack SELECTION_WAND = new ItemStack(Material.ARROW);
+    public static ItemStack TELEPORT_WAND = new ItemStack(Material.BLAZE_ROD);
     public ArrayList<SubCommand> commands = new ArrayList<>();
 
     private final EntityTeleportMap entityListMap = new EntityTeleportMap();
@@ -65,7 +69,7 @@ public class EntityManager extends JavaPlugin {
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (!sender.hasPermission("entitymanager.use")) {
-            sender.sendMessage(Chat.PLUGIN_TAG + "version " + VERSION);
+            sender.sendMessage(Chat.PLUGIN_TAG + "Version " + VERSION);
             return false;
         }
 

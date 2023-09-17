@@ -27,11 +27,8 @@ public class Listeners implements Listener {
         map = plugin.getEntityListMap();
     }
 
-    private final ItemStack selectionWand = new ItemStack(Material.ARROW);
-    private final ItemStack teleportWand = new ItemStack(Material.BLAZE_ROD);
-
     /*
-    Represents an event that is called when a player right clicks an entity that also contains the location where the entity was clicked.
+    Represents an event that is called when a player right-clicks an entity that also contains the location where the entity was clicked.
      */
     @EventHandler
     public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent e) {
@@ -41,7 +38,7 @@ public class Listeners implements Listener {
         if (!plugin.wandEnabled(p)) return;
 
         ItemStack inHand = p.getInventory().getItemInMainHand();
-        if (inHand.equals(selectionWand)) {
+        if (inHand.getType().equals(Material.ARROW)) {
             EntityList theList = map.getPlayerList(p);
             Entity theEntity = e.getRightClicked();
 
@@ -63,7 +60,7 @@ public class Listeners implements Listener {
         }
 
         ItemStack inHand = p.getInventory().getItemInMainHand();
-        if (inHand.equals(teleportWand)) {
+        if (inHand.equals(EntityManager.TELEPORT_WAND)) {
             Location location = e.getPlayer().getLocation();
             TeleportUtils.teleport(p, location, map);
         }

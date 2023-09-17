@@ -42,7 +42,8 @@ public class WandToggleCommand extends SubCommand implements Listener {
         }
 
         map.put(pUUID, true);
-        plugin.msg(player, "Toggled wand usage " + Chat.green + "ON" + Chat.reset + ".");
+        plugin.msg(player, "Toggled wand usage " + Chat.green + "ON" + Chat.reset
+                + ". Use a(n) " + EntityManager.SELECTION_WAND.getType() + " to select.");
     }
 
     @Override

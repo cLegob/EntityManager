@@ -1,6 +1,7 @@
 package entityManager.teleporter;
 
 import entityManager.Chat;
+import entityManager.EntityManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -15,7 +16,7 @@ public class TeleportUtils {
 
         if (list.isEmpty()) {
             player.sendMessage(Chat.red + "You don't have any entities selected. "
-                    + Chat.reset + "To do so, right click with a stone shovel in hand.");
+                    + Chat.reset + "To do so, right click with a(n) " + EntityManager.TELEPORT_WAND.getType() + " in hand.");
             return;
         }
 

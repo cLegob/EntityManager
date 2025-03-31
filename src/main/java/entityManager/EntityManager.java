@@ -1,5 +1,6 @@
 package entityManager;
 
+import entityManager.EntityAI.EntityAICommand;
 import entityManager.commands.*;
 import entityManager.commands.teleportCommands.EntityTeleport;
 import entityManager.commands.teleportCommands.EntityTeleportListClear;
@@ -27,6 +28,8 @@ public class EntityManager extends JavaPlugin {
     private final EntityTeleportMap entityListMap = new EntityTeleportMap();
     private final SelectionMap selectionMap = new SelectionMap();
     private final Map<UUID, Boolean> wandMap = new HashMap<>();
+    private final Map<UUID, Boolean> aiMap = new HashMap<>();
+
 
     public EntityTeleportMap getEntityListMap() {
         return entityListMap;
@@ -38,6 +41,10 @@ public class EntityManager extends JavaPlugin {
 
     public Map<UUID, Boolean> getWandMap() {
         return wandMap;
+    }
+
+    public Map<UUID, Boolean> getAiMap() {
+        return aiMap;
     }
 
     public void onEnable() {
@@ -52,6 +59,7 @@ public class EntityManager extends JavaPlugin {
         commands.add(new EntityTeleport(this));
         commands.add(new ConfirmCommand(this));
         commands.add(new UndoRemovalCommand(this));
+        commands.add(new EntityAICommand(this));
 
         getPlugin(EntityManager.class).saveDefaultConfig();
 
@@ -65,6 +73,11 @@ public class EntityManager extends JavaPlugin {
     public boolean wandEnabled(Player p) {
         wandMap.putIfAbsent(p.getUniqueId(), false);
         return wandMap.get(p.getUniqueId());
+    }
+
+    public boolean toggleAiEnabled(Player p) {
+        aiMap.putIfAbsent(p.getUniqueId(), false);
+        return aiMap.get(p.getUniqueId());
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {

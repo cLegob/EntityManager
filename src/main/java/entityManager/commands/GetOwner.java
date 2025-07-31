@@ -2,6 +2,7 @@ package entityManager.commands;
 
 import entityManager.EntityManager;
 import entityManager.SubCommand;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.AnimalTamer;
 import org.bukkit.entity.Entity;
@@ -25,10 +26,13 @@ public class GetOwner extends SubCommand {
         }
         Player entityOwner = (Player) getEntityOwner(lookingAt);
         if (entityOwner == null) {
-            String msg = lookingAt.getName() + " does not have an owner.";
+            String name = lookingAt.getCustomName() != null ? lookingAt.getCustomName() : lookingAt.getName();
+            String msg = name + " does not have an owner.";
+            sender.sendMessage(msg);
             return;
         }
-        String msg = lookingAt.getName() + " is owned by " + entityOwner.getName();
+        String name = lookingAt.getCustomName() != null ? lookingAt.getCustomName() : lookingAt.getName();
+        String msg = name + " is owned by " + entityOwner.getName();
         sender.sendMessage(msg);
     }
 
@@ -44,7 +48,8 @@ public class GetOwner extends SubCommand {
 
     private Entity getEntityLookingAt(CommandSender sender) {
         Player player =  (Player) sender;
-        RayTraceResult result = player.rayTraceBlocks(10); // scan 10 blocks in front of the player
+        World world = player.getWorld();
+        RayTraceResult result = world.rayTraceEntities(player.getEyeLocation(), player.getEyeLocation().getDirection(), 10, entity -> !entity.equals(player)); // scan 10 blocks in front of the player
         if (result != null) {
             return result.getHitEntity();
         }

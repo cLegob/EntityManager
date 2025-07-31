@@ -52,6 +52,7 @@ public class EntityManager extends JavaPlugin {
         commands.add(new EntityTeleport(this));
         commands.add(new ConfirmCommand(this));
         commands.add(new UndoRemovalCommand(this));
+        commands.add(new GetOwner(this));
 
         getPlugin(EntityManager.class).saveDefaultConfig();
 
